@@ -40,13 +40,13 @@ use Laith98Dev\PluginManager\tasks\GetPluginDataTask;
 use Laith98Dev\PluginManager\tasks\RemovePluginTask;
 use Vecnavium\FormsUI\SimpleForm;
 use Vecnavium\FormsUI\CustomForm;
+use Vecnavium\FormsUI\ModalForm;
 use pocketmine\player\Player;
 use pocketmine\plugin\Plugin;
 use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\utils\Filesystem;
 use pocketmine\utils\TextFormat;
-use Vecnavium\FormsUI\ModalForm;
 
 final class Main extends PluginBase {
 
