@@ -1,0 +1,11 @@
+--- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/Laith98Dev/PluginManager
+build-by-default: true
+branches:
+- master
+projects:
+  PluginManager:
+    path: ""
+    libs:
+      - src: Vecnavium/FormsUI/FormsUI
+        version: ^1.1.2
+...
