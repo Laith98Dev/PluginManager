@@ -122,7 +122,7 @@ final class Main extends PluginBase {
         $description = strlen($plugin->getDescription()->getDescription()) == 0 ? "No Description" : $plugin->getDescription()->getDescription();
         $form->setContent(
             $line . $space . $white . "- Name: " . $green . $plugin->getName() .
-            $line . $space . $white . "- Author(s): " . $green . $version .
+            $line . $space . $white . "- Author(s): " . $green . $authors .
             $line . $space . $white . "- Version: " . $green . $version .
             $line . $space . $white . "- Description: " . $green . $description .
             $line . $space
@@ -149,7 +149,8 @@ final class Main extends PluginBase {
                 return false;
             }
 
-            if($this->getServer()->getPluginManager()->getPlugin($name) !== null){
+            $plugins = array_map("strtolower", array_keys($this->getServer()->getPluginManager()->getPlugins()));
+            if(in_array(strtolower($name), $plugins, true)){
                 $this->OpenPoggitForm($player, "You've already installed this plugin!");
                 return false;
             }
