@@ -221,8 +221,8 @@ final class Main extends PluginBase {
                             ], GetPluginDataTask::PLUIN_YAML_DATA), false, stream_context_create(GetPluginDataTask::OPTIONS));
 
                             if(($yaml = yaml_parse($ymlData)) !== false){
-                                if(strlen($yaml["description"]) > 0){
-                                    if(strlen($yaml["description"] ?? "") > 0) $description = $yaml["description"]; 
+                                if(isset($yaml["description"]) && strlen($yaml["description"]) > 0){
+                                    $description = $yaml["description"]; 
                                 }
     
                                 if(isset($yaml["author"]) && strlen($yaml["author"]) > 0){
