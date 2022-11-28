@@ -234,7 +234,7 @@ final class Main extends PluginBase {
                                 }
                             }
                         } catch (\Exception $e) {
-                            $this->getLogger()->error($e->getMessage());
+                            // $this->getLogger()->error($e->getMessage());
                         }
 
                         $form->setContent(

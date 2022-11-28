@@ -71,9 +71,7 @@ class GetPluginDataTask extends AsyncTask {
     public function onCompletion(): void
     {
         $results = $this->getResult();
-
-        var_dump($results);
-
+        
         if($results == "[]"){
             ($this->callback)(self::FAILED, [], "Plugin Not Found!");
         } else {
