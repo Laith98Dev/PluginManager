@@ -65,7 +65,7 @@ class GetPluginDataTask extends AsyncTask {
     {
         $url = self::POGGIT_PATH . $this->pluginName;
         $result = Internet::getURL($url, 15);
-        $this->setResult($result->getBody());
+        $this->setResult($result?->getBody());
     }
 
     public function onCompletion(): void
@@ -74,6 +74,8 @@ class GetPluginDataTask extends AsyncTask {
         
         if($results == "[]"){
             ($this->callback)(self::FAILED, [], "Plugin Not Found!");
+        } elseif($results === null){
+            ($this->callback)(self::FAILED, [], "An error occured while accessing the Poggit API!");
         } else {
             ($this->callback)(self::SUCCESS, json_decode($results, true));
         }

@@ -47,6 +47,7 @@ use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\utils\Filesystem;
 use pocketmine\utils\TextFormat;
+use pocketmine\VersionInfo;
 
 final class Main extends PluginBase {
 
@@ -113,9 +114,14 @@ final class Main extends PluginBase {
         $white = TextFormat::WHITE;
         $green = TextFormat::GREEN;
         $authors = "Unnamed";
+        $apis = "";
 
         if(count($plugin->getDescription()->getAuthors()) > 0){
             $authors = implode(", ", $plugin->getDescription()->getAuthors());
+        }
+
+        if(!empty($plugin->getDescription()->getCompatibleApis())){
+            $apis = implode(", ", $plugin->getDescription()->getCompatibleApis());
         }
 
         $version = $plugin->getDescription()->getVersion();
@@ -123,6 +129,7 @@ final class Main extends PluginBase {
         $form->setContent(
             $line . $space . $white . "- Name: " . $green . $plugin->getName() .
             $line . $space . $white . "- Author(s): " . $green . $authors .
+            $line . $space . $white . "- API(s): " . $green . $apis .
             $line . $space . $white . "- Version: " . $green . $version .
             $line . $space . $white . "- Description: " . $green . $description .
             $line . $space
@@ -158,13 +165,26 @@ final class Main extends PluginBase {
             $this->getServer()->getAsyncPool()->submitTask(new GetPluginDataTask($name, function (int $results, array $data, ?string $error = null) use ($player, $name){
                 switch ($results){
                     case GetPluginDataTask::SUCCESS:
-                        $form = new SimpleForm(function (Player $player, ?int $data_ = null) use ($name){
+                        $form = new SimpleForm(function (Player $player, ?int $data_ = null) use ($name, $data){
                             if($data_ === null)
                                 return false;
                             
+                            $data = $data[0];
                             switch ($data_){
                                 case 0:
-                                    $path = $this->getServer()->getDataPath() . "plugins/" . $name . ".phar";
+
+                                    if(isset($data["api"]) && !empty($data["api"])){
+                                        $j = $data["api"][0];
+
+                                        if(isset($j["from"], $j["to"])){
+                                            if (version_compare($j["from"], "4.0.0", "<") || version_compare($j["to"], VersionInfo::BASE_VERSION, ">")){
+                                                $this->OpenPoggitForm($player, "This plugin is not compatible with your pocketmine version!");
+                                                return false;
+                                            }
+                                        }
+                                    }
+
+                                    $path = $this->getServer()->getDataPath() . "plugins/" . $data["name"] . ".phar";
 
                                     Filesystem::safeFilePutContents($path, 
                                         file_get_contents(GetPluginDataTask::POGGIT_GET_PATH . $name,
@@ -211,6 +231,15 @@ final class Main extends PluginBase {
                         $authors = "Unnamed";
                         $description = "No Description";
                         $data = $data[0];
+                        $apis = "";
+
+                        if(isset($data["api"]) && !empty($data["api"])){
+                            $j = $data["api"][0];
+                            if(isset($j["from"], $j["to"])){
+                                $apis = $j["from"] . " - " . $j["to"];
+                            }
+                        }
+
                         try {
                             $ymlData = file_get_contents(str_replace([
                                 "{commit}",
@@ -221,11 +250,11 @@ final class Main extends PluginBase {
                             ], GetPluginDataTask::PLUIN_YAML_DATA), false, stream_context_create(GetPluginDataTask::OPTIONS));
 
                             if(($yaml = yaml_parse($ymlData)) !== false){
-                                if(isset($yaml["description"]) && strlen($yaml["description"]) > 0){
+                                if(isset($yaml["description"]) && is_string($yaml["author"]) && strlen($yaml["description"]) > 0){
                                     $description = $yaml["description"]; 
                                 }
     
-                                if(isset($yaml["author"]) && strlen($yaml["author"]) > 0){
+                                if(isset($yaml["author"]) && is_string($yaml["author"]) && strlen($yaml["author"]) > 0){
                                     $authors = strval($yaml["author"]);
                                 }
     
@@ -241,6 +270,7 @@ final class Main extends PluginBase {
                             $line . $space . $white . "- Name: " . $green . $data["name"] .
                             $line . $space . $white . "- Version: " . $green . $data["version"] .
                             $line . $space . $white . "- Author(s): " . $green . $authors .
+                            $line . $space . $white . "- API(s): " . $green . $apis .
                             $line . $space . $white . "- Downloads: " . $green . $data["downloads"] .
                             $line . $space . $white . "- License: " . $green . $data["license"] .
                             $line . $space . $white . "- State: " . $green . $data["state_name"] .

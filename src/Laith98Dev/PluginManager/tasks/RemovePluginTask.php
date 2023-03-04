@@ -65,21 +65,20 @@ class RemovePluginTask extends Task {
         return $this->plugin;
     }
 
-    public function getPLayer(): ?Player
+    public function getPlayer(): ?Player
     {
         return $this->player;
     }
 
     public function onRun(): void
     {
-        $loader = $this->getLoader();
         $plugin = $this->getPlugin();
         $player = $this->getPlayer();
 
         $reflection = new \ReflectionClass(PluginBase::class);
-		$file = $reflection->getProperty("file");
-		$file->setAccessible(true);
-		$pharPath = str_replace("\\", "/", rtrim($file->getValue($plugin), "\\/"));
+        $file = $reflection->getProperty("file");
+        $file->setAccessible(true);
+        $pharPath = str_replace("\\", "/", rtrim($file->getValue($plugin), "\\/"));
         $path = str_replace("phar://", "", $pharPath);
 
         Filesystem::recursiveUnlink($path);
