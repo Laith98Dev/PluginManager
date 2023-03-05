@@ -74,10 +74,10 @@ class GetPluginDataTask extends AsyncTask {
         
         if($results == "[]"){
             ($this->callback)(self::FAILED, [], "Plugin Not Found!");
-        } elseif($results === null){
-            ($this->callback)(self::FAILED, [], "An error occured while accessing the Poggit API!");
+        } elseif(is_array(($data = json_decode($results, true)))) {
+            ($this->callback)(self::SUCCESS, $data);
         } else {
-            ($this->callback)(self::SUCCESS, json_decode($results, true));
+            ($this->callback)(self::FAILED, [], "An error occured while accessing the Poggit API!");
         }
     }
 }
