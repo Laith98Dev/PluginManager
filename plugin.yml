@@ -1,7 +1,7 @@
 name: PluginManager
-api: 4.0.0
+api: 5.0.0
 main: Laith98Dev\PluginManager\Main
-version: 1.0.1
+version: 1.0.2
 author: Laith98Dev
 description: Advanced PluginManager for PocketMine
 website: https://github.com/Laith98Dev
