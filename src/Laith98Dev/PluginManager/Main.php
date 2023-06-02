@@ -177,7 +177,7 @@ final class Main extends PluginBase {
                                         $j = $data["api"][0];
 
                                         if(isset($j["from"], $j["to"])){
-                                            if (version_compare($j["from"], "4.0.0", "<") || version_compare($j["to"], VersionInfo::BASE_VERSION, ">")){
+                                            if (version_compare($j["from"], "5.0.0", "<") || version_compare($j["to"], VersionInfo::BASE_VERSION, ">")){
                                                 $this->OpenPoggitForm($player, "This plugin is not compatible with your pocketmine version!");
                                                 return false;
                                             }

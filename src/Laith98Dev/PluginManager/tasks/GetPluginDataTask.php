@@ -56,9 +56,9 @@ class GetPluginDataTask extends AsyncTask {
 
     public function __construct(
         private string $pluginName,
-        private $callback
+        $callback
     ){
-        // NOOP
+        $this->storeLocal("onCompletion", $callback);
     }
     
     public function onRun(): void
@@ -71,13 +71,14 @@ class GetPluginDataTask extends AsyncTask {
     public function onCompletion(): void
     {
         $results = $this->getResult();
+        $callback = $this->fetchLocal("onCompletion");
         
         if($results == "[]"){
-            ($this->callback)(self::FAILED, [], "Plugin Not Found!");
+            ($callback)(self::FAILED, [], "Plugin Not Found!");
         } elseif(is_array(($data = json_decode($results, true)))) {
-            ($this->callback)(self::SUCCESS, $data);
+            ($callback)(self::SUCCESS, $data);
         } else {
-            ($this->callback)(self::FAILED, [], "An error occured while accessing the Poggit API!");
+            ($callback)(self::FAILED, [], "An error occured while accessing the Poggit API!");
         }
     }
 }
