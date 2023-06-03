@@ -75,7 +75,7 @@ class GetPluginDataTask extends AsyncTask {
         
         if($results == "[]"){
             ($callback)(self::FAILED, [], "Plugin Not Found!");
-        } elseif(is_array(($data = json_decode($results, true)))) {
+        } elseif(is_string($results) && is_array(($data = json_decode($results, true)))) {
             ($callback)(self::SUCCESS, $data);
         } else {
             ($callback)(self::FAILED, [], "An error occured while accessing the Poggit API!");

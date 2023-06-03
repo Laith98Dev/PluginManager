@@ -77,7 +77,6 @@ class RemovePluginTask extends Task {
 
         $reflection = new \ReflectionClass(PluginBase::class);
         $file = $reflection->getProperty("file");
-        $file->setAccessible(true);
         $pharPath = str_replace("\\", "/", rtrim($file->getValue($plugin), "\\/"));
         $path = str_replace("phar://", "", $pharPath);
 
